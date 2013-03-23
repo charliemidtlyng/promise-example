@@ -1,19 +1,22 @@
-[{
-    "name": "Skambankt",
-    "mbid": "e26531c7-45c5-4637-a9fe-d088b93a300f",
-    "match": "1",
-    "url": "www.last.fm\/music\/Skambankt",
-    "image": "http:\/\/userserve-ak.last.fm\/serve\/34\/325424.jpg"
-}, {
-    "name": "gnom",
-    "mbid": "5dd11b94-1742-4de8-b278-a49affc01e17",
-    "match": "0.960553",
-    "url": "www.last.fm\/music\/gnom",
-    "image": "http:\/\/userserve-ak.last.fm\/serve\/34\/365263.jpg"
-}, {
-    "name": "Janove Ottesen",
-    "mbid": "436227b6-870d-4c50-ab78-73e603c91ae2",
-    "match": "0.905744",
-    "url": "www.last.fm\/music\/Janove+Ottesen",
-    "image": "http:\/\/userserve-ak.last.fm\/serve\/34\/34956.jpg"
-}]
+{
+    "artistMbid": "2c3bac0a-5158-442f-b50b-056aae52138c",
+    "similar": [{
+        "name": "Skambankt",
+        "mbid": "e26531c7-45c5-4637-a9fe-d088b93a300f",
+        "match": "1",
+        "url": "www.last.fm\/music\/Skambankt",
+        "image": "http:\/\/userserve-ak.last.fm\/serve\/34\/325424.jpg"
+    }, {
+        "name": "gnom",
+        "mbid": "5dd11b94-1742-4de8-b278-a49affc01e17",
+        "match": "0.960553",
+        "url": "www.last.fm\/music\/gnom",
+        "image": "http:\/\/userserve-ak.last.fm\/serve\/34\/365263.jpg"
+    }, {
+        "name": "Janove Ottesen",
+        "mbid": "436227b6-870d-4c50-ab78-73e603c91ae2",
+        "match": "0.905744",
+        "url": "www.last.fm\/music\/Janove+Ottesen",
+        "image": "http:\/\/userserve-ak.last.fm\/serve\/34\/34956.jpg"
+    }]
+}
