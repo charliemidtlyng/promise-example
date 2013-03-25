@@ -7,7 +7,9 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
             }
 
             function renderTopArtists(artist) {
-                $('<li><span>Navn: ' + artist.name + '</span>' + addImage(artist.image) + '</li>').appendTo('ul');
+                _.each(artists, function(artist) {
+                    $('<li><span>Navn: ' + artist.name + '</span>' + addImage(artist.image) + '</li>').appendTo('ul');
+                });
             }
 
             var fetchTopArtists = function() {
@@ -15,9 +17,7 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                         url: '/rest/artists',
                         dataType: 'json',
                         success: function(artists) {
-                            _.each(artists, function(artist) {
                                 renderTopArtists(artist);
-                            });
                         },
                         error: function(dog) {
                             $('<li>Ooops!</li>').appendTo('ul');
