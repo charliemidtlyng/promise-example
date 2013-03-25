@@ -10,6 +10,10 @@
     <properties>
         <jetty.portNumber>8080</jetty.portNumber>
         <jetty.scanInterval>1</jetty.scanInterval>
+        <jersey.version>1.11</jersey.version>
+        <jackson.version>1.9.2</jackson.version>
+        <spring.version>3.2.2.RELEASE</spring.version>
+
     </properties>
     <build>
         <plugins>
@@ -25,16 +29,41 @@
                         </connector>
                     </connectors>
                     <scanIntervalSeconds>${jetty.scanInterval}</scanIntervalSeconds>
-                    <contextHandlers>
-                        <contextHandler implementation="org.eclipse.jetty.webapp.WebAppContext">
-                            <war>${basedir}/jetty-deps/rp.war</war>
-                            <contextPath>/</contextPath>
-                        </contextHandler>
-                    </contextHandlers>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+  <dependencies>
+
+    <!-- Spring 3 dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <!-- Jackson JSON Mapper -->
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.7.1</version>
+    </dependency>
+
+  </dependencies>
+
     <repositories>
     <repository>
       <id>central</id>
