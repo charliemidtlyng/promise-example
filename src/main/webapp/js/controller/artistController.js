@@ -12,7 +12,7 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
 
             var fetchTopArtists = function() {
                     $.ajax({
-                        url: '/api/topartists.json',
+                        url: '/rest/artists',
                         dataType: 'json',
                         success: function(artists) {
                             _.each(artists, function(artist) {
