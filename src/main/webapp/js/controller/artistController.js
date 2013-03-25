@@ -5,13 +5,41 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
             function addImage(imageUrl) {
                 return '<img src=' + imageUrl + ' />';
             }
-
+            
             function renderTopArtists(artist) {
                 _.each(artists, function(artist) {
                     $('<li><span>Navn: ' + artist.name + '</span>' + addImage(artist.image) + '</li>').appendTo('ul');
                 });
             }
+            
+            function renderSimilarArtists(allSimilarArtists) {
+                _.each(allSimilarArtists, function(similarArtists) {
+                    var mbid = similarArtists.artistMbid;
+                    _.each(similarArtists.similar, function(artist) {
+                        $('<div>Navn: ' + artist.name + ':' + artist.match + '</div>').appendTo('li#' + mbid);
+                    });
+                });
+            }
+            
+            function fetchSimilarArtist(artist) {
+                return $.ajax({
+                    url: '/api/similar-' + artist.mbid + '.json',
+                    dataType: 'json'
+                });
+            }
 
+            /** Task 1 **/
+            var renderUl = function() {
+                    /** Task 1: Make me use deferred with whenjs: https://github.com/cujojs/when/wiki/Examples **/
+                    function appendUl() {
+                        $('<ul></ul>').appendTo(controller.elem);
+                    }
+                    setTimeout(function() {
+                        appendUl();
+                    }, 1500);
+                };
+
+            // Task 2
             var fetchTopArtists = function() {
                     $.ajax({
                         url: '/rest/artists',
@@ -26,16 +54,11 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                     });
                 };
 
-            /** Hack below here! **/
-            var renderUl = function() {
-                    // TODO: Make me use deferred with when
-                    function appendUl() {
-                        $('<ul></ul>').appendTo(controller.elem);
-                    }
-                    setTimeout(function() {
-                        appendUl();
-                    }, 1500);
-                };
+
+            /** Task 3 **/
+            var loadAllSimilarArtists = function(artists) {
+                // TODO: Implement me with when all
+            };
 
             // Public functions
             return {
@@ -45,7 +68,7 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                 },
                 render: function() {
                     $(controller.elem).empty();
-                    // TODO: Run in sequence
+                    /** Task 1-3 **/
                     renderUl();
                     fetchTopArtists();
                 }
