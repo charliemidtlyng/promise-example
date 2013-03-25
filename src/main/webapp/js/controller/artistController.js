@@ -5,13 +5,13 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
             function addImage(imageUrl) {
                 return '<img src=' + imageUrl + ' />';
             }
-            
-            function renderTopArtists(artist) {
+
+            function renderTopArtists(artists) {
                 _.each(artists, function(artist) {
                     $('<li><span>Navn: ' + artist.name + '</span>' + addImage(artist.image) + '</li>').appendTo('ul');
                 });
             }
-            
+
             function renderSimilarArtists(allSimilarArtists) {
                 _.each(allSimilarArtists, function(similarArtists) {
                     var mbid = similarArtists.artistMbid;
@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                     });
                 });
             }
-            
+
             function fetchSimilarArtist(artist) {
                 return $.ajax({
                     url: '/api/similar-' + artist.mbid + '.json',
@@ -45,7 +45,7 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                         url: '/rest/artists',
                         dataType: 'json',
                         success: function(artists) {
-                                renderTopArtists(artist);
+                                renderTopArtists(artists);
                         },
                         error: function(dog) {
                             $('<li>Ooops!</li>').appendTo('ul');
