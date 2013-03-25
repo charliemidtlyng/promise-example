@@ -31,27 +31,33 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
             /** Task 1 **/
             var renderUl = function() {
                     /** Task 1: Make me use deferred with whenjs: https://github.com/cujojs/when/wiki/Examples **/
+                    var deferred = when.defer();
                     function appendUl() {
                         $('<ul></ul>').appendTo(controller.elem);
+                        deferred.resolve();
                     }
                     setTimeout(function() {
                         appendUl();
                     }, 1500);
+
+                    return deferred.promise;
                 };
 
             // Task 2
             var fetchTopArtists = function() {
+                    var deferred = when.defer();
                     $.ajax({
                         url: '/rest/artists',
                         dataType: 'json',
                         success: function(artists) {
-                                renderTopArtists(artists);
+                            deferred.resolve(artists);
                         },
                         error: function(dog) {
-                            $('<li>Ooops!</li>').appendTo('ul');
+                            deferred.reject();
                         }
 
                     });
+                    return deferred.promise;
                 };
 
 
@@ -69,8 +75,9 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                 render: function() {
                     $(controller.elem).empty();
                     /** Task 1-3 **/
-                    renderUl();
-                    fetchTopArtists();
+                    renderUl()
+                        .then(fetchTopArtists)
+                        .then(renderTopArtists);
                 }
             };
         };
