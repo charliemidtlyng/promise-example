@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
 
             function renderTopArtists(artists) {
                 _.each(artists, function(artist) {
-                    $('<li><span>Navn: ' + artist.name + '</span>' + addImage(artist.image) + '</li>').appendTo('ul');
+                    $('<li id='+artist.mbid+'><span>Navn: ' + artist.name + '</span>' + addImage(artist.image) + '</li>').appendTo('ul');
                 });
                 return artists;
             }
