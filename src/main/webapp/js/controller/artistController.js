@@ -22,10 +22,18 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
             }
 
             function fetchSimilarArtist(artist) {
-                return $.ajax({
+                var deferred = when.defer();
+                $.ajax({
                     url: '/api/similar-' + artist.mbid + '.json',
-                    dataType: 'json'
+                    dataType: 'json',
+                    success: function(data) {
+                        deferred.resolve(data);
+                    },
+                    error: function() {
+                        deferred.reject();
+                    }
                 });
+                return deferred.promise;
             }
 
             /** Task 1 **/
@@ -63,7 +71,12 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
 
             /** Task 3 **/
             var loadAllSimilarArtists = function(artists) {
-                // TODO: Implement me with when all
+                var deferredArray = [];
+                _.each(artists, function(artist) {
+                    var deferred = fetchSimilarArtist(artist);
+                    deferredArray.push(deferred);
+                });
+                return when.all(deferredArray);
             };
 
             // Public functions
@@ -77,7 +90,9 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                     /** Task 1-3 **/
                     renderUl()
                         .then(fetchTopArtists)
-                        .then(renderTopArtists);
+                        .then(renderTopArtists)
+                        .then(loadAllSimilarArtists)
+                        .then(renderSimilarArtists);
                 }
             };
         };
