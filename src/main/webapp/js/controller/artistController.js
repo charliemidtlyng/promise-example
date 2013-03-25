@@ -10,6 +10,7 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                 _.each(artists, function(artist) {
                     $('<li><span>Navn: ' + artist.name + '</span>' + addImage(artist.image) + '</li>').appendTo('ul');
                 });
+                return artists;
             }
 
             function renderSimilarArtists(allSimilarArtists) {
@@ -19,11 +20,12 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
                         $('<div>Navn: ' + artist.name + ':' + artist.match + '</div>').appendTo('li#' + mbid);
                     });
                 });
+                return allSimilarArtists;
             }
 
             function fetchSimilarArtist(artist) {
                 return $.ajax({
-                    url: '/api/similar-' + artist.mbid + '.json',
+                    url: '/rest/artists/similarArtists/' + artist.mbid,
                     dataType: 'json'
                 });
             }
