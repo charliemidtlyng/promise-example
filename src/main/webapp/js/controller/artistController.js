@@ -73,12 +73,12 @@ define(['jquery', 'underscore', 'when'], function($, _, when) {
 
             /** Task 3 **/
             var loadAllSimilarArtists = function(artists) {
-                var deferredArray = [];
+                var promiseArray = [];
                 _.each(artists, function(artist) {
-                    var deferred = fetchSimilarArtist(artist);
-                    deferredArray.push(deferred);
+                    var promise = fetchSimilarArtist(artist);
+                    promiseArray.push(promise);
                 });
-                return when.all(deferredArray);
+                return when.all(promiseArray);
             };
 
             // Public functions
