@@ -229,15 +229,17 @@ loadMyUrl1
 					<h3>Eksempel</h3>
 						
 					<pre><code>
-var p1 = new Promise();
-p1.then(console.log);
-p1.resolve(42);
+var d1 = when.defer(),
+    p1 = d1.promise;
+p1.then(alert);
+d1.resolve(42);
 
-var p2 = new Promise();
-p2.resolve(2013);
-p2.then(console.log);
+var d2 = when.defer(),
+    p2 = d2.promise;
+d2.resolve(2013);
+p2.then(alert);
 
-// prints:
+// alerts:
 // 42
 // 2013
 					</code></pre>
@@ -305,7 +307,7 @@ var renderUl = function() {
     }
     setTimeout(function() {
       appendUl();
-    }, 3000);
+    }, 1500);
   };
 ...
 
@@ -323,12 +325,12 @@ render: function() {
 var renderUl = function() {
     var deferred = when.defer();
 
-    function resolve() {
+    function appendUl() {
       $('&lt;ul&gt;&lt;/ul&gt;').appendTo(controller.elem);
       deferred.resolve()
     }
     setTimeout(function() {
-      resolve();
+      appendUl();
     }, 1500);
     return deferred.promise;
   };
@@ -345,7 +347,7 @@ renderUl().then(fetchTopArtists);
 					<small>
 					<p>FetchTopArtists gjør egentlig to ting: Den finner artister og rendrer de i success-callbacket.</p>
 					<p>Sørg for at ajax-kallet returnerer et promise </p>
-					<p>Rendering skjer etter kallet, men gjøres IKKE i successcallbacket</p>
+					<p>Rendering skal skje etter kallet, men IKKE i success-callbacket</p>
 					<p>Tips: $.ajax() vil automatisk returnere et promise hvis du fjerner success og error</p></small>
 					<pre><code>
 var fetchTopArtists = function() {
@@ -389,9 +391,9 @@ render: function() {
 				<section>
 				<section>
 					<h5>Oppgave 3</h5>
-					<small><p>Liste ut tilsvarende artister for hver av de tre artistene som tegnes ut.</p>
-					<p>Vi må gjøre et ajaxkall for alle tre artister. </p>
-					<ul><li>Tips: Lag et array med deferred og bruk when.all()</li><li>Tips 2: Husk å returnere innhold fra hvert av kallene i then(...) for å bruke verdien videre</li></ul>
+					<small><p>Liste ut "tilsvarende artister" for hver av de tre artistene.</p>
+					<p>Vi må gjøre et ajax-kall for alle tre artister. </p>
+					<ul><li>Tips: Lag et array med deferred/promise og bruk when.all()</li><li>Tips 2: Husk å returnere innhold fra hvert av kallene i then(...) for å bruke verdien videre</li></ul>
 					</small>
 					<pre><code>function fetchSimilarArtist(artist) {
     return $.ajax({
@@ -437,12 +439,12 @@ function fetchSimilarArtist(artist) {
 				<section>
 					<h4>Oppgave 3 - løsningsforslag</h4>
 					<pre><code>var loadAllSimilarArtists = function(artists) {
-	var deferredArray = [];
+	var promiseArray = [];
 	_.each(artists, function(artist) {
-		var deferred = fetchSimilarArtist(artist);
-		deferredArray.push(deferred);
+		var promise = fetchSimilarArtist(artist);
+		promiseArray.push(promise);
 	});
-	return when.all(deferredArray);
+	return when.all(promiseArray);
 };
 
 render: function() {
