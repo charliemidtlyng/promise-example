@@ -106,15 +106,15 @@
 
 
 								var doSomeAsyncCode = function() {
-								  var deferred = when.defer(); //  <--- Oppretter en deferred
+								  var deferred = when.defer(); //  <--- Opprette deferred
 								  function asyncWork() {
 								    ... some async code...
-								    deferred.resolve(); //Evt. deferred.reject()  <--- Setter tilstanden
+								    deferred.resolve(); //  <--- Sett tilstand
 								  }
 								  asyncWork();
-								  return deferred.promise; //  <--- Returnerer promise
+								  return deferred.promise; //  <--- Returner promise
 								}
-								doSomeAsyncCode().then(...) //  <--- Bruker promise for å nøste kode
+								doSomeAsyncCode().then(...) //  <--- Bruk promise for å nøsting
 						</script>
 					</section>
 				</section>
@@ -123,7 +123,8 @@
 					<h2>Når kan vi bruke dette?</h2>
 					<p> Både på asynkrone og synkrone operasjoner</p>
 
-					<p> Gir en bedre oversikt og struktur når nøsting blir komplekst</p>
+					<p> Sørger for at man kan bruke returverdien fra funksjoner istedenfor callbacks </p>
+
 
 
 					<br />
@@ -138,7 +139,7 @@
 				<section>
 					<section data-markdown>
 					<script type="text/template">
-					##Eksempel
+					##Eksempel på nøstede funksjoner
 
 						$('button').click(function() {
 						  beOmTwitterNavn(function(navn) {
@@ -161,7 +162,7 @@
 					</section>
 				</section>
 
-				<section>
+				<!--section>
 					<section data-markdown>
 					<script type="text/template">
 					##Eksempel - ajax
@@ -199,7 +200,7 @@
 						  .then(mycallback)
 					</script>
 					</section>
-				</section>
+				</section --> 
 
 				<section>
 					<h3>Ekvivalent kode</h3>
@@ -225,6 +226,23 @@ loadMyUrl1
 				</section>
 
 				<section>
+					<h3>Eksempel</h3>
+						
+					<pre><code>
+var p1 = new Promise();
+p1.then(console.log);
+p1.resolve(42);
+
+var p2 = new Promise();
+p2.resolve(2013);
+p2.then(console.log);
+
+// prints:
+// 42
+// 2013
+					</code></pre>
+				</section>
+				<!--section>
 					<section>
 
 					<h2>EcmaScript 6</h2>
@@ -239,7 +257,7 @@ loadMyUrl1
 					<section>
 						<p>Så lenge vi må leve med gamle nettlesere må vi nok lære oss Deferred/Promise uansett...</p>
 					</section>
-				</section>
+				</section-->
 
 				<section>
 					<h2>Oppgaver</h2>
