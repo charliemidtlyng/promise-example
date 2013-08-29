@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Promises</title>
+
+		<meta name="description" content="Workshop on promises in JavaScript">
+		<meta name="author" content="Charlie Midtlyng">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h2>Deferred og Promises i JS</h1>
+					<br />
+					<h3>(aka Futures, Delayed...)</h3>
+					<br />
+					<p>
+						<small>Charlie Midtlyng (Webarkitektur)</small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Deferred/Promises</h2>
+					<ul>
+						<li>Pattern</li>
+						<li>Returnerer et objekt som representerer resultatet (<b>ikke verdien</b>)</li>
+						<br />
+						<li>Unngår å låse browseren (vs. sync)</li>
+						<li>Separation of concerns (vs. callbacks)</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>CommonJS Promises/A</h2>
+						<h4>Promise kan ha 3 tilstander</h4>
+						<ul>
+							<li class="fragment">ikke ferdig</li>
+							<li class="fragment">ferdig</li>
+							<li class="fragment">feilet</li>
+						</ul>
+					</section>
+					<section>
+						<h2>CommonJS Promises/A</h2>
+						<ul>
+							<li>Fra "ikke ferdig" til enten <b>ferdig</b> eller <b>feilet</b> </li>
+							<ul><li>Endrer aldri tilstand etter dette</li></ul>	
+						</ul>
+						<img src="images/promiseflow.png" />
+					</section>
+					<section data-markdown>
+					<script type="text/template">
+						## Nøsting vha «<b>then</b>»
+						<ul>
+							<li>Utføres sekvensiellt</li>
+							<ul><li>Resultatet er et promise-objekt (og ikke en verdi)</li></ul>
+						</ul><br /><br />
+
+							  promise.then(sucessHandler, errorHandler, progressHandler)
+					</script>
+				</section>
+				<section data-markdown>
+					<script type="text/template">
+						## Nøsting vha «<b>then</b>»
+						<ul>
+							<li>Utføres sekvensiellt</li>
+							<ul><li>Resultatet er et promise-objekt (og ikke en verdi)</li></ul>
+						</ul><br /><br />
+
+							  promise.
+							  	then(sucessHandler, errorHandler, progressHandler).
+							  	then(sucessHandler, errorHandler, progressHandler).
+							  	then(sucessHandler, errorHandler, progressHandler).
+							  osv...
+					</script>
+				</section>
+				</section>
+
+				<!-- Example of nested vertical slides -->
+				<section>
+					<section>
+						<h2>Hva er forskjellen på deferred og promise?</h2>
+						<ul>
+							<li class="fragment"><b>Deferred:</b> Denne inneholder et promise og setter tilstanden til objektet til <b>suksess/feilet</b></li>
+							<li class="fragment"><b>Promise:</b> "Read-only" på tilstand og får beskjed når tilstanden endrer seg </li>
+							<li class="fragment">Returner alltid <b>promise</b> til den som skal bruke det (for å hindre endring av state)</li>
+						</ul>
+						
+					</section>
+					<section>
+						<img src="images/promisechart.png" />
+						<aside class="notes">
+								Funksjon A oppretter deferred, skal gjøre noe async og returnerer promise MED EN GANG.
+								Asynk-kode skjer etterhvert.
+								Funksjon B kalles basert på promise fra A og venter derfor til A er ferdig.
+								A gjør seg ferdig og promise sin state oppdateres. B kjører deretter videre basert på verdien i A. 
+  					</aside>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+						##Eksempel
+
+								function doSomeAsyncCode() {
+								  var deferred = when.defer(); //  <--- Opprette deferred  
+								  ... 
+								  	// Async kode
+								  	deferred.resolve(); //  <--- Setter til slutt tilstand
+								  ...
+
+								  return deferred.promise; //  <--- Returner promise
+								}
+
+								doSomeAsyncCode().then(...) //  <--- Bruk promise for å nøsting
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<h2>Når kan vi bruke dette?</h2>
+					<p> Både på asynkrone og synkrone operasjoner</p>
+
+					<p> Sørger for at man kan bruke <b>returverdien</b> fra funksjoner istedenfor callbacks </p>
+
+
+
+					<br />
+					<br />
+					<ul>
+						<li>AJAX-kall</li>
+						<li>UI-effekter </li>
+						<li>Parallelle operasjoner - behandle resultatene samtidig</li>
+					</ul>
+				</section>
+
+				<section>
+					<section data-markdown>
+					<script type="text/template">
+					##Eksempel på nøstede funksjoner
+
+						$('button').click(function() {
+						  beOmTwitterNavn(function(navn) {
+						    twitter.finnTweetsFor(navn, function(tweets) {
+						      ui.show(tweets);
+						    });
+						  });
+						});
+					</script>
+					</section>
+					<section data-markdown>
+					<script type="text/template">
+					##Eksempel
+
+						$('button').clickPromise()
+						  .then(beOmTwitterNavn)
+						  .then(twitter.finnTweetsFor)
+						  .then(ui.show);
+					</script>
+					</section>
+				</section>
+
+				<!--section>
+					<section data-markdown>
+					<script type="text/template">
+					##Eksempel - ajax
+
+						jQuery.ajax({
+						  url: myurl1,
+						  dataType: 'json',
+						  success: function(data) {
+						    var myVar2;
+						    // process data using myVar1, set state of myVar2,
+						    // then send it back
+						    jQuery.ajax({
+						      url: myurl2,
+						      dataType: 'json',
+						      success: function(data) {
+						        // do stuff with myVar1 and myVar2
+						        jQuery.ajax({
+						          url: myurl3,
+						          dataType: 'json',
+						          success: mycallback
+						        });
+						      }
+						    });
+						  }
+						});
+					</script>
+					</section>
+					<section data-markdown>
+					<script type="text/template">
+					##Eksempel
+
+						loadMyUrl1
+						  .then(loadMyUrl2)
+						  .then(loadMyUrl3)
+						  .then(mycallback)
+					</script>
+					</section>
+				</section --> 
+
+				<section>
+					<h3>Ekvivalent kode</h3>
+ 					<pre><code>
+$('button').clickPromise()
+	.then(beOmTwitterNavn)
+	.then(twitter.finnTweetsFor)
+	.then(ui.show);
+				  	</code></pre>
+						
+					<pre><code>
+$('button').clickPromise()
+  .then(function(){
+    return beOmTwitterNavn();
+  })
+  .then(function(navn){
+    return twitter.finnTweetsFor(navn);
+  })
+  .then(function(tweets){
+    return ui.show(tweets);
+  })
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Eksempel</h3>
+						
+					<pre><code>
+var d1 = when.defer(),
+    p1 = d1.promise;
+p1.then(alert);
+d1.resolve(42);
+
+var d2 = when.defer(),
+    p2 = d2.promise;
+d2.reject(2013);
+p2.then(alert, prompt).then(alert);
+					</code></pre>
+				</section>
+				<!--section>
+					<section>
+
+					<h2>EcmaScript 6</h2>
+					<h4>Yield >> Promise ?</h4>
+					<p>
+						Kanskje kan vi skrive kode litt mer "the-java-way" i fremtiden?
+					</p>
+					<p>
+						Interessant abstraksjon: <a href="http://taskjs.org/">http://taskjs.org/</a>
+					</p>
+					</section>
+					<section>
+						<p>Så lenge vi må leve med gamle nettlesere må vi nok lære oss Deferred/Promise uansett...</p>
+					</section>
+				</section-->
+<!-- 
+				<section>
+					<h2>Oppgaver</h2>
+					<p><a href="http://www.goo.gl/KaVzb">http://www.goo.gl/KaVzb</a> eller </p>
+					<br />
+					<br />
+					<br />
+					<p>(evt. https://github.com/kjell-gunnar-midtlyng/promise-example)</p>
+				</section> -->
+
+				<section>
+					<h2>whenjs</h2>
+					<ol>
+						<li>"It passes the Promises/A Test Suite and is frighteningly fast"</li>
+					</ol>
+					<pre><code>
+// Opprette en defer og promise
+var deferred = when.defer();
+var promise = deferred.promise;
+
+// Fullført - sende med verdi i resolve-metoden
+deferred.resolve(promiseOrValue);
+
+// Eller det feilet
+deferred.reject(reason);
+
+// Utføre en operasjon basert på promise
+promise.then(successFunction, errorFunction)
+
+// Vente på flere promises
+var arrayOfPromises = [promise1, promise2, promise3];
+when.all(arrayOfPromises).then(...)
+					</code></pre>
+				</section>
+
+				<section>
+				<section>
+					<h2>Hvorfor</h2>
+					Unngå callback: <br><br>
+					- (Potensielt) Lettere å lese og endre kode<br><br>
+					- Gjenbrukbarhet<br><br>
+				</section>
+				<section>
+					<h2>Hvorfor</h2>
+					Løsere kobling mellom funksjoner<br><br>
+					<aside class="notes">
+	        	Ender opp med å skrive funksjoner på en ny måte som gir muligheter for løsere koblinger. <br><br>
+						En funksjon som gjør et GET-kall bør ikke nødvendigvis bry seg om hva dataene skal brukes til etterpå annet enn å returnere det som er mottatt<br><br>
+    			</aside>
+					
+				</section>
+				<section>
+					<h2>Hvorfor</h2>
+					"Parallellitet"<br>
+					 Vente på flere funksjoner før neste funksjon kalles
+				</section>
+
+				<section>
+					<h3>Rammeverk som støtter dette</h3>
+					<pre><code>
+jQuery, DoJo, when.js, q.js +++
+					</code></pre>
+					<br /><br />
+					<p>
+						Har du jQuery på prosjektet er det ingen grunn til å ikke prøve ut promises!
+					</p>
+				</section>
+				</section>
+
+				<section>
+					<br /><br /><br /><br /><br />
+					<h1>?</h1>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: 'serif', // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'cube', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
